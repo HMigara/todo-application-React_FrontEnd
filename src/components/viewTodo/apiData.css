@@ -1,0 +1,95 @@
+/* CSS for Available Todos Table */
+
+/* Container styles */
+.container {
+    margin: 20px;
+}
+
+.data-table{
+    max-height: 300px;
+        /* Set the maximum height of the container */
+        overflow-y: scroll;
+        /* Enable vertical scrolling */
+}
+/* Table styles */
+.todo-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header styles */
+.todo-table thead {
+    background-color: #f0f0f0;
+}
+
+.todo-table th,
+.todo-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.todo-table th {
+    font-weight: bold;
+}
+
+/* Alternating row colors for better readability */
+.todo-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover effect on rows */
+.todo-table tbody tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+ .btn-edit {
+   margin: 5px;
+   margin-right: 10px;
+ }
+ .btn-add {
+     margin: 20px;
+ }
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .todo-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .todo-table thead,
+    .todo-table tbody,
+    .todo-table th,
+    .todo-table td,
+    .todo-table tr {
+        display: block;
+    }
+
+    .todo-table tr {
+        border: 1px solid #ccc;
+    }
+
+    .todo-table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+    }
+
+    .todo-table td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+   
+}
