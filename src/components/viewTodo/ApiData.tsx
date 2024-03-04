@@ -8,6 +8,7 @@ interface DataItem {
   id: number;
   titel: string;
   discription: string;
+  status:string;
   setDate:String;
   endDate:String;
 }
@@ -17,6 +18,7 @@ const ApiData: React.FC = () => {
   const [data, setData] = useState<DataItem[]>([]);
   const [title, setTitle] = useState<String>('');
   const [description, setDescription] = useState<String>('');
+  const [status, setStatus] = useState<String>('');
   const [startDate, setStartDate] = useState<String>('');
   const [endDate, setEndDate] = useState<String>('');
   const [editingItem, setEditingItem] = useState<DataItem | null>(null); // Track the item being edited
@@ -68,6 +70,7 @@ const ApiData: React.FC = () => {
       id: 0, // Generating id dynamically
       titel: title,
       discription: description,
+      status:status,
       setDate: startDate,
       endDate: endDate
     };
@@ -87,6 +90,7 @@ const ApiData: React.FC = () => {
         // Clear the form fields after successful submission
         setTitle('');
         setDescription('');
+        setStatus('');
         setStartDate('');
         setEndDate('');
       } else {
@@ -97,16 +101,18 @@ const ApiData: React.FC = () => {
     }
   };
 
-  // //Update TODO with API
+  //set data to the above filds
    const handleUpdate = (item: DataItem) => {
     // Set the editing item and populate the form fields with its data
     setEditingItem(item);
     setTitle(item.titel);
     setDescription(item.discription);
+    setStatus(item.status);
     setStartDate(item.setDate);
     setEndDate(item.endDate);
   };
 
+  //call The API for the update Todo
   const callUpdate = async () => {
     if (!editingItem) return;
 
@@ -114,6 +120,7 @@ const ApiData: React.FC = () => {
       ...editingItem,
       titel: title,
       discription: description,
+      status:status,
       setDate: startDate,
       endDate: endDate,
     };
@@ -133,8 +140,10 @@ const ApiData: React.FC = () => {
         // Fetch todos again to update the list after updating
         fetchData();
         setEditingItem(null); // Clear the editing state
+        //clear
          setTitle('');
         setDescription('');
+        setStatus('');
         setStartDate('');
         setEndDate('');
       } else {
@@ -183,6 +192,20 @@ const ApiData: React.FC = () => {
         </div>
 
         <div className="mb-3 row">
+          <label htmlFor="todoDescription" className="col-sm-2 col-form-label form-label">Todo Status</label>
+          <div className="col-sm-10">
+            <input 
+              type="text" 
+              className="form-control form-input" 
+              id="todoDescription" 
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="mb-3 row">
           <label htmlFor="startDate" className="col-sm-2 col-form-label form-label">Todo Start Date</label>
           <div className="col-sm-10">
             <input 
@@ -220,38 +243,40 @@ const ApiData: React.FC = () => {
     </div>
     </section>
 
-<section className='view-data-section'>
-    <div className="container">
-      <h1>Available Todos</h1>
-      <table className="data-table table table-success table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Set Date</th>
-            <th>End Date</th>
-            <th>Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map(item => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.titel}</td>
-              <td>{item.discription}</td>
-              <td>{item.setDate.split("T")[0]}</td>
-              <td>{item.endDate.split( "T" )[0]}</td>
-              <td>
-                <button type="button" className="btn-edit btn btn-primary" onClick={() =>handleUpdate(item)} >Update</button>
-                <button type="button" className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-</section>
+    <section className='view-data-section'>
+        <div className="container">
+          <h1>Available Todos</h1>
+          <table className="data-table table table-success table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Set Date</th>
+                <th>End Date</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.titel}</td>
+                  <td>{item.discription}</td>
+                  <td>{item.status}</td>
+                  <td>{item.setDate.split("T")[0]}</td>
+                  <td>{item.endDate.split( "T" )[0]}</td>
+                  <td>
+                    <button type="button" className="btn-edit btn btn-primary" onClick={() =>handleUpdate(item)} >Update</button>
+                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+    </section>
 </>
   );
 };
