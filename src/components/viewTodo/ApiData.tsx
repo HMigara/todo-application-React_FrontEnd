@@ -12,12 +12,14 @@ interface DataItem {
   endDate:String;
 }
 
+
 const ApiData: React.FC = () => {
   const [data, setData] = useState<DataItem[]>([]);
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [title, setTitle] = useState<String>('');
+  const [description, setDescription] = useState<String>('');
+  const [startDate, setStartDate] = useState<String>('');
+  const [endDate, setEndDate] = useState<String>('');
+  const [editingItem, setEditingItem] = useState<DataItem | null>(null); // Track the item being edited
 
     useEffect(() => {
     fetchData();
@@ -96,7 +98,53 @@ const ApiData: React.FC = () => {
   };
 
   // //Update TODO with API
-  // const UpdateData = async (data item) => {
+   const handleUpdate = (item: DataItem) => {
+    // Set the editing item and populate the form fields with its data
+    setEditingItem(item);
+    setTitle(item.titel);
+    setDescription(item.discription);
+    setStartDate(item.setDate);
+    setEndDate(item.endDate);
+  };
+
+  const callUpdate = async () => {
+    if (!editingItem) return;
+
+    const updatedItem: DataItem = {
+      ...editingItem,
+      titel: title,
+      discription: description,
+      setDate: startDate,
+      endDate: endDate,
+    };
+
+    try {
+      const response = await fetch(`https://localhost:44315/api/Todos?id=${editingItem.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedItem),
+      });
+
+      if (response.ok) {
+        console.log('Data updated successfully');
+        alert("updated")
+        // Fetch todos again to update the list after updating
+        fetchData();
+        setEditingItem(null); // Clear the editing state
+         setTitle('');
+        setDescription('');
+        setStartDate('');
+        setEndDate('');
+      } else {
+        console.error('Failed to update data');
+        alert("Not updated")
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  };
 
   // }
 
@@ -165,6 +213,7 @@ const ApiData: React.FC = () => {
         <div className="mb-3 row">
           <div className="col-sm-10 offset-sm-2">
             <button type="submit" className="btn-add btn btn-success">Add new Todo</button>
+            <button type="button" className="btn-update btn btn-warning" onClick={() => callUpdate()}>Update Todo</button>
           </div>
         </div>
       </form>
@@ -194,7 +243,7 @@ const ApiData: React.FC = () => {
               <td>{item.setDate.split("T")[0]}</td>
               <td>{item.endDate.split( "T" )[0]}</td>
               <td>
-                <button type="button" className="btn-edit btn btn-primary" onClick={() =>UpdateData(item)} >Update</button>
+                <button type="button" className="btn-edit btn btn-primary" onClick={() =>handleUpdate(item)} >Update</button>
                 <button type="button" className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
             </tr>
